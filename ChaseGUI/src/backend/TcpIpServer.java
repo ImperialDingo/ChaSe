@@ -7,22 +7,18 @@ import java.util.HashMap;
 
 public class TcpIpServer {
 
-	
+	public TcpIpServer()
+	{
+		clients = new HashMap<String, Socket>();
+	}	
+
+
 	public void startServer() throws Exception
 	{
 		System.out.println("Starting Server");
 		acceptorSocket = new ServerSocket(6789);
 		listening = true;
-		/*
-		Thread ServerThread = new Thread()
-		{
-			public void run()
-			{
-				listenForConnections();
-			}			
-		};
-		ServerThread.start();
-		*/
+
 		new Thread(()->listenForConnections()).start();
 	}
 	
@@ -39,7 +35,7 @@ public class TcpIpServer {
 			               new BufferedReader(new InputStreamReader(newClient.getInputStream()));
 				String username = inFromClient.readLine();
 				clients.put(username, newClient);	
-
+				System.out.println(username);
 				new Thread(()->receiveMessage(username)).start();
 ;
 			} catch (IOException e) {
@@ -53,20 +49,21 @@ public class TcpIpServer {
 	private void receiveMessage(String username)
 	{
 		
-		
+		System.out.println("Receive Message");
 		try {
 			BufferedReader inFromClient = new BufferedReader(new InputStreamReader(clients.get(username).getInputStream()));
 			
 			//String message = new String();
-			
-			while(inFromClient.ready())
+			System.out.println(inFromClient.ready());
+			while(listening)
 			{
+				//System.out.println("Ready to deal with message");
 				//Get dstUsername
 				//Get message
 				//message = inFromClient.readLine();
 				//Send Message to dstUsername;
 					try {
-						sendMessage(username, username);
+						sendMessage(username, inFromClient.readLine());
 					} catch (Exception e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -82,31 +79,12 @@ public class TcpIpServer {
 	private void sendMessage(String dstUsername, String message)throws Exception
 	{
 		DataOutputStream outToClient = new DataOutputStream(clients.get(dstUsername).getOutputStream());
-        message  = message.toUpperCase() + '\n';
-        outToClient.writeBytes(message);
+	        message  = message.toUpperCase() + '\n';
+       	        outToClient.writeBytes(message);
 	}
 	
    public static void main(String argv[]) throws Exception
       {
-	   
-	   /*
-         String clientSentence;
-         String capitalizedSentence;
-         ServerSocket welcomeSocket = new ServerSocket(6789);
-
-         while(true)
-         {
-            Socket connectionSocket = welcomeSocket.accept();
-            BufferedReader inFromClient =
-               new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
-            DataOutputStream outToClient = new DataOutputStream(connectionSocket.getOutputStream());
-            clientSentence = inFromClient.readLine();
-            System.out.println("Received: " + clientSentence);
-            capitalizedSentence = clientSentence.toUpperCase() + '\n';
-            outToClient.writeBytes(capitalizedSentence);
-         }
-         */
-	   
 	   TcpIpServer chaseServer = new TcpIpServer();
 	   chaseServer.startServer();
       }
