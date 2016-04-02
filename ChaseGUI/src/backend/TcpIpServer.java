@@ -20,6 +20,7 @@ public class TcpIpServer {
 		listening = true;
 
 		new Thread(()->listenForConnections()).start();
+		new Thread( ()->listenForClose()).start();
 	}
 	
 	private void listenForConnections()
@@ -35,7 +36,7 @@ public class TcpIpServer {
 			               new BufferedReader(new InputStreamReader(newClient.getInputStream()));
 				String username = inFromClient.readLine();
 				clients.put(username, newClient);	
-				System.out.println(username);
+				System.out.println(username + " has enterd the chat.");
 				new Thread(()->receiveMessage(username)).start();
 ;
 			} catch (IOException e) {
@@ -48,51 +49,74 @@ public class TcpIpServer {
 
 	private void receiveMessage(String username)
 	{
-		
-		System.out.println("Receive Message");
 		try {
 			BufferedReader inFromClient = new BufferedReader(new InputStreamReader(clients.get(username).getInputStream()));
 			
-			//String message = new String();
-			System.out.println(inFromClient.ready());
 			while(listening)
 			{
-				//System.out.println("Ready to deal with message");
-				//Get dstUsername
-				//Get message
-				//message = inFromClient.readLine();
-				//Send Message to dstUsername;
 					try {
 						sendMessage(username, inFromClient.readLine());
 					} catch (Exception e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
-					}
-			
+					}			
 			}
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 	
 	private void sendMessage(String dstUsername, String message)throws Exception
 	{
+		System.out.println("SendMessage()");
 		DataOutputStream outToClient = new DataOutputStream(clients.get(dstUsername).getOutputStream());
+		System.out.println("Received: " + message);
 	        message  = message.toUpperCase() + '\n';
        	        outToClient.writeBytes(message);
 	}
 	
-   public static void main(String argv[]) throws Exception
-      {
-	   TcpIpServer chaseServer = new TcpIpServer();
-	   chaseServer.startServer();
-      }
+	private void listenForClose()
+	{
+		 terminator = new BufferedReader(new InputStreamReader(System.in));
+		String checkClose = new String();
+		while(listening)
+		{
+			try{
+				checkClose = terminator.readLine();
+			}catch(IOException e)
+			{
+				e.printStackTrace();
+			}	
+			if(checkClose.equals("close"))
+			{
+				notifyAndClose();
+			}
+		}
+	}
+
+	private void notifyAndClose()
+	{
+		System.out.println("Terminating ChaSe Server.");
+		listening = false;
+		try{
+			acceptorSocket.close();
+		}catch(IOException e)
+		{
+			e.printStackTrace();
+		}
+	}
+
+	public static void main(String argv[]) throws Exception
+	{
+		TcpIpServer chaseServer = new TcpIpServer();
+		chaseServer.startServer();
+	}
 
    
-   private ServerSocket acceptorSocket;
-   private boolean listening;
-   private HashMap<String, Socket> clients;
+	private ServerSocket acceptorSocket;
+	private boolean listening;
+	private HashMap<String, Socket> clients;
+
+	private BufferedReader terminator;
    
    
 }
