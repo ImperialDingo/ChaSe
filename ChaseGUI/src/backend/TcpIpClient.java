@@ -15,37 +15,40 @@ public class TcpIpClient {
 			toServer = new DataOutputStream(clientSocket.getOutputStream());
 			loggedIn = true;
 			System.out.println("ChaSe Started!");	
-			try{	
-				new Thread( ()->startMessages()).start();
-			}catch (IOException e)
-			{
-				e.printStackTrace();
-			}
-			try{	
-				new Thread( ()->receiveMessages()).start();
-			}catch (IOException e)
-			{
-				e.printStackTrace();
-			}
-
-
-			
+	
+			new Thread( ()->startMessages()).start();
+			new Thread( ()->receiveMessages()).start();			
 	}
 
-	private void startMessages() throws IOException
+	private void startMessages()
 	{
-		toServer.writeBytes("username" + '\n');
+		try {
+			toServer.writeBytes("username" + '\n');
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		while(loggedIn)
 		{
-			toServer.writeBytes(fromUser.readLine());
+			try {
+				toServer.writeBytes(fromUser.readLine());
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 
-	private void receiveMessages() throws IOException
+	private void receiveMessages()
 	{
 		while(loggedIn)
 		{
-			System.out.println(fromServer.readLine());
+			try {
+				System.out.println(fromServer.readLine());
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -54,7 +57,7 @@ public class TcpIpClient {
 		
 		TcpIpClient chaseClient = new TcpIpClient();
 		try{
-		chaseClient.startClient();
+			chaseClient.startClient();
 		}catch(Exception e)
 		{
 			e.printStackTrace();		
