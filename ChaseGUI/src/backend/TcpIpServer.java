@@ -37,7 +37,6 @@ public class TcpIpServer {
 				clients.put(username, newClient);	
 				System.out.println(username);
 				new Thread(()->receiveMessage(username)).start();
-;
 			} catch (IOException e) {
 
 				e.printStackTrace();
@@ -50,20 +49,19 @@ public class TcpIpServer {
 	{
 		
 		System.out.println("Receive Message");
+		String dstUsername = new String();
+		String message = new String();
 		try {
 			BufferedReader inFromClient = new BufferedReader(new InputStreamReader(clients.get(username).getInputStream()));
-			
-			//String message = new String();
-			System.out.println(inFromClient.ready());
+
 			while(listening)
 			{
-				//System.out.println("Ready to deal with message");
-				//Get dstUsername
-				//Get message
-				//message = inFromClient.readLine();
-				//Send Message to dstUsername;
+					message = inFromClient.readLine();
+					dstUsername = message.substring(0,message.lastIndexOf(":~"));
+					message = message.substring(message.lastIndexOf(":~")+ 3);
+
 					try {
-						sendMessage(username, inFromClient.readLine());
+						sendMessage(username, dstUsername, message);
 					} catch (Exception e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -76,18 +74,32 @@ public class TcpIpServer {
 		}
 	}
 	
-	private void sendMessage(String dstUsername, String message)throws Exception
+	private void sendMessage(String srcUsername, String dstUsername, String message)throws Exception
 	{
-		DataOutputStream outToClient = new DataOutputStream(clients.get(dstUsername).getOutputStream());
-	        message  = message.toUpperCase() + '\n';
-       	        outToClient.writeBytes(message);
+		if(clients.get(dstUsername) == null)
+		{
+			noUserFound(srcUsername);
+		}
+		else
+		{
+			message = srcUsername + ":~:" + message;
+			DataOutputStream outToClient = new DataOutputStream(clients.get(dstUsername).getOutputStream());
+	       	outToClient.writeBytes(message);
+		}
+	}
+	private void noUserFound(String username) throws IOException
+	{
+		DataOutputStream outToClient;
+
+		outToClient = new DataOutputStream(clients.get(username).getOutputStream());
+       	outToClient.writeBytes("User is not online.");
 	}
 	
-   public static void main(String argv[]) throws Exception
-      {
-	   TcpIpServer chaseServer = new TcpIpServer();
-	   chaseServer.startServer();
-      }
+  public static void main(String argv[]) throws Exception
+  {
+   TcpIpServer chaseServer = new TcpIpServer();
+   chaseServer.startServer();
+  }
 
    
    private ServerSocket acceptorSocket;
