@@ -17,6 +17,8 @@ public class TcpIpClient {
 			System.out.println("ChaSe Started!");	
 			System.out.println("Enter your username.");
 			username = fromUser.readLine();
+			System.out.println("Who are you sending a message to?");
+			dstUsername = fromUser.readLine();
 			
 			new Thread( ()->startMessages()).start();
 			new Thread( ()->receiveMessages()).start();			
@@ -44,7 +46,7 @@ public class TcpIpClient {
 	private void sendMessage(String message) throws IOException
 	{
 		System.out.println("You Entered: " + message);
-		toServer.writeBytes(message + '\n');
+		toServer.writeBytes(dstUsername + ":~:" + message + '\n');
 	}
 
 	private void receiveMessages()
@@ -78,4 +80,5 @@ public class TcpIpClient {
 	private DataOutputStream toServer;
 	boolean loggedIn;
 	private String username;
+	private String dstUsername;
 }

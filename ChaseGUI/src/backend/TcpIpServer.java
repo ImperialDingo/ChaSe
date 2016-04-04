@@ -25,10 +25,8 @@ public class TcpIpServer {
 	
 	private void listenForConnections()
 	{
-		System.out.println("Listening for connections");
 		while(listening)
 		{
-			System.out.println("Try Listening");
 			try {
 				System.out.println("Listening for connections");
 				Socket newClient = acceptorSocket.accept();
