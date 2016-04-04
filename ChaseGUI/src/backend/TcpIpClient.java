@@ -15,7 +15,9 @@ public class TcpIpClient {
 			toServer = new DataOutputStream(clientSocket.getOutputStream());
 			loggedIn = true;
 			System.out.println("ChaSe Started!");	
-	
+			System.out.println("Enter your username.");
+			username = fromUser.readLine();
+			
 			new Thread( ()->startMessages()).start();
 			new Thread( ()->receiveMessages()).start();			
 	}
@@ -23,7 +25,7 @@ public class TcpIpClient {
 	private void startMessages()
 	{
 		try {
-			toServer.writeBytes("username" + '\n');
+			toServer.writeBytes(username+ '\n');
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -31,12 +33,18 @@ public class TcpIpClient {
 		while(loggedIn)
 		{
 			try {
-				toServer.writeBytes(fromUser.readLine());
+				sendMessage(fromUser.readLine());
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
+	}
+
+	private void sendMessage(String message) throws IOException
+	{
+		System.out.println("You Entered: " + message);
+		toServer.writeBytes(message + '\n');
 	}
 
 	private void receiveMessages()
@@ -69,4 +77,5 @@ public class TcpIpClient {
 	private BufferedReader fromUser;
 	private DataOutputStream toServer;
 	boolean loggedIn;
+	private String username;
 }
