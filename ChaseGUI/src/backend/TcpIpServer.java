@@ -57,7 +57,8 @@ public class TcpIpServer {
 					message = inFromClient.readLine();
 					dstUsername = message.substring(0,message.lastIndexOf(":~"));
 					message = message.substring(message.lastIndexOf(":~")+ 3);
-
+					System.out.println(dstUsername);
+					System.out.println(message);
 					try {
 						sendMessage(username, dstUsername, message);
 					} catch (Exception e) {
@@ -73,20 +74,22 @@ public class TcpIpServer {
 	{
 		if(clients.get(dstUsername) == null)
 		{
+			System.out.println("user not found");
 			noUserFound(srcUsername);
 		}
 		else
 		{
-			message = srcUsername + ":~:" + message;
+			System.out.println("User found");
+			message = srcUsername + ":~:" + message + '\n';
 			DataOutputStream outToClient = new DataOutputStream(clients.get(dstUsername).getOutputStream());
-	       	outToClient.writeBytes(message);
+		       	outToClient.writeBytes(message);
 		}
 	}
 	
 	private void noUserFound(String username) throws IOException
 	{
 		DataOutputStream outToClient = new DataOutputStream(clients.get(username).getOutputStream());
-       	outToClient.writeBytes("User is not online.");
+       		outToClient.writeBytes("User is not online." + '\n');
 	}
 
 	private void listenForClose()
