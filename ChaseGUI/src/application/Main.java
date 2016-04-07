@@ -11,6 +11,7 @@ import javafx.stage.Stage;
 import javafx.scene.layout.Pane;
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.fxml.*;
 
 public class Main extends Application{
@@ -35,6 +36,8 @@ public class Main extends Application{
 			
 			// Create a new Scene for the log in screen and display out to screen
 			Scene loginScreen = new Scene(loginPane);
+			Image icon = new Image(getClass().getResourceAsStream("t.png"));
+			primaryStage.getIcons().add(icon);
 			primaryStage.setScene(loginScreen);
 			primaryStage.centerOnScreen();
 			primaryStage.show();

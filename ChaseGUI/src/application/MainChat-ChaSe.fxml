@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.input.*?>
 <?import javafx.scene.effect.*?>
 <?import java.lang.*?>
 <?import java.util.*?>
@@ -14,32 +15,33 @@
       <menus>
         <Menu mnemonicParsing="false" text="File">
           <items>
-            <MenuItem mnemonicParsing="false" text="Preferences…" />
-            <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem mnemonicParsing="false" text="Quit" />
+            <MenuItem fx:id="closeButton" mnemonicParsing="false" onAction="#closeHandler" text="Quit" />
           </items>
         </Menu>
-        <Menu mnemonicParsing="false" text="Edit">
-          <items>
-            <MenuItem mnemonicParsing="false" text="Cut" />
-            <MenuItem mnemonicParsing="false" text="Copy" />
-            <MenuItem mnemonicParsing="false" text="Paste" />
-            <MenuItem mnemonicParsing="false" text="Delete" />
-            <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem mnemonicParsing="false" text="Select All" />
-            <MenuItem mnemonicParsing="false" text="Unselect All" />
-          </items>
-        </Menu>
+            <Menu mnemonicParsing="false" text="Preferences">
+               <items>
+                  <MenuItem fx:id="connectMenu" mnemonicParsing="false" onAction="#PreferencesHandler" text="Connect..." />
+                  <Menu mnemonicParsing="false" text="Background Color">
+                    <items>
+                      <MenuItem mnemonicParsing="false">
+                           <graphic>
+                              <ColorPicker fx:id="colorPicker" onAction="#setBackGroundColorHandler" stylesheets="@application.css" />
+                           </graphic>
+                        </MenuItem>
+                    </items>
+                  </Menu>
+               </items>
+            </Menu>
         <Menu mnemonicParsing="false" text="Help">
           <items>
-            <MenuItem mnemonicParsing="false" text="About ChaSe" />
+            <MenuItem fx:id="aboutButton" mnemonicParsing="false" onAction="#aboutButtonHandler" text="About ChaSe" />
           </items>
         </Menu>
       </menus>
     </MenuBar>
     <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
          <children>
-            <TextArea fx:id="mainChatText" editable="false" layoutX="14.0" layoutY="18.0" onDragDetected="#initialize" prefHeight="264.0" prefWidth="608.0" AnchorPane.bottomAnchor="93.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="18.0" AnchorPane.topAnchor="18.0" />
+            <TextArea fx:id="mainChatText" editable="false" layoutX="14.0" layoutY="18.0" prefHeight="264.0" prefWidth="608.0" stylesheets="@application.css" AnchorPane.bottomAnchor="93.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="18.0" AnchorPane.topAnchor="18.0" />
             <TextField fx:id="textInput" layoutX="14.0" layoutY="298.0" onAction="#textInputHandler" prefHeight="47.0" prefWidth="546.0" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="80.0" />
             <Button fx:id="sendButton" layoutX="560.0" layoutY="298.0" mnemonicParsing="false" onAction="#sendButtonHandler" prefHeight="47.0" prefWidth="61.0" text="Send" AnchorPane.bottomAnchor="30.0" AnchorPane.rightAnchor="19.0" />
          </children>

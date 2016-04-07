@@ -13,25 +13,7 @@
       <menus>
         <Menu mnemonicParsing="false" text="File">
           <items>
-            <MenuItem mnemonicParsing="false" text="Preferences…" />
-            <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem mnemonicParsing="false" text="Quit" />
-          </items>
-        </Menu>
-        <Menu mnemonicParsing="false" text="Edit">
-          <items>
-            <MenuItem mnemonicParsing="false" text="Cut" />
-            <MenuItem mnemonicParsing="false" text="Copy" />
-            <MenuItem mnemonicParsing="false" text="Paste" />
-            <MenuItem mnemonicParsing="false" text="Delete" />
-            <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem mnemonicParsing="false" text="Select All" />
-            <MenuItem mnemonicParsing="false" text="Unselect All" />
-          </items>
-        </Menu>
-        <Menu mnemonicParsing="false" text="Help">
-          <items>
-            <MenuItem mnemonicParsing="false" text="About ChaSe" />
+            <MenuItem fx:id="closeButton" mnemonicParsing="false" onAction="#closeHandler" text="Quit" />
           </items>
         </Menu>
       </menus>
@@ -46,7 +28,7 @@
                      </font>
                   </Label>
                   <TextField fx:id="userTextField" layoutX="99.0" layoutY="3.0" prefHeight="25.0" prefWidth="220.0" promptText="Enter your username" />
-                  <Button fx:id="loginButton" layoutX="99.0" layoutY="45.0" mnemonicParsing="false" onAction="#initialize" prefHeight="36.0" prefWidth="149.0" text="Login">
+                  <Button fx:id="loginButton" layoutX="99.0" layoutY="45.0" mnemonicParsing="false" onAction="#logInButtonHandler" prefHeight="36.0" prefWidth="149.0" text="Login">
                      <font>
                         <Font name="System Bold" size="18.0" />
                      </font>
