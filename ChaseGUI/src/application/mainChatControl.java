@@ -9,6 +9,7 @@
 package application;
 
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -29,17 +30,25 @@ public class mainChatControl extends ChaSeGUI{
     @FXML // This method is called by the FXMLLoader when initialization is complete
     @Override
     void initialize() {
-    	 assert backgroundColor != null : "fx:id=\"backgroundColor\" was not injected: check your FXML file 'MainChat-ChaSe.fxml'.";
-         assert textInput != null : "fx:id=\"textInput\" was not injected: check your FXML file 'MainChat-ChaSe.fxml'.";
-         assert closeButton != null : "fx:id=\"closeButton\" was not injected: check your FXML file 'MainChat-ChaSe.fxml'.";
-         assert mainChatText != null : "fx:id=\"mainChatText\" was not injected: check your FXML file 'MainChat-ChaSe.fxml'.";
-         assert aboutButton != null : "fx:id=\"aboutButton\" was not injected: check your FXML file 'MainChat-ChaSe.fxml'.";
-         assert sendButton != null : "fx:id=\"sendButton\" was not injected: check your FXML file 'MainChat-ChaSe.fxml'."; 
-         mainChatText.setWrapText(true);
+    	assert backgroundColor != null : "fx:id=\"backgroundColor\" was not injected: check your FXML file 'MainChat-ChaSe.fxml'.";
+        assert textInput != null : "fx:id=\"textInput\" was not injected: check your FXML file 'MainChat-ChaSe.fxml'.";
+        assert closeButton != null : "fx:id=\"closeButton\" was not injected: check your FXML file 'MainChat-ChaSe.fxml'.";
+        assert mainChatText != null : "fx:id=\"mainChatText\" was not injected: check your FXML file 'MainChat-ChaSe.fxml'.";
+        assert aboutButton != null : "fx:id=\"aboutButton\" was not injected: check your FXML file 'MainChat-ChaSe.fxml'.";
+        assert sendButton != null : "fx:id=\"sendButton\" was not injected: check your FXML file 'MainChat-ChaSe.fxml'."; 
+
+        backgroundColor = new MenuItem();
+        aboutButton = new MenuItem();
+                
+        backgroundColor.setOnAction(event -> setBackGroundColorHandler(event));
+        aboutButton.setOnAction(event->aboutButtonHandler(event));
+
+        
+    	mainChatText.setWrapText(true);
     }
     
     @FXML
-    void textInputHandler() {
+    private void textInputHandler() {
         textInput.setOnKeyPressed((event) -> {
             if (event.getCode() == KeyCode.ENTER)
                 sendMessage(getUsername());
@@ -47,15 +56,14 @@ public class mainChatControl extends ChaSeGUI{
     }
     
     @FXML
-    void sendButtonHandler() {
+    private void sendButtonHandler() {
     	sendButton.setOnMouseClicked((event) -> {
             sendMessage(getUsername());
         });
     }
     
     @FXML
-    void aboutButtonHandler() {
-        aboutButton.setOnAction((event) -> {
+    private void aboutButtonHandler(ActionEvent event) {
             //Initialize the about screen
             try {
             	//aboutStage = new Stage();
@@ -76,7 +84,7 @@ public class mainChatControl extends ChaSeGUI{
             catch (Exception e) {
                 e.printStackTrace();
             }
-        });
+  
     }
     
     @FXML
@@ -117,11 +125,11 @@ public class mainChatControl extends ChaSeGUI{
     }
     
     @FXML
-    void setBackGroundColorHandler() {
-    	colorPicker.setOnAction((event) -> {
+    void setBackGroundColorHandler(ActionEvent event) {
+
     		String color = "#" + Integer.toHexString(colorPicker.getValue().hashCode()); 
     		setTextAreaColor(color);
-    	});
+
     }
     
     // TODO once user selects save, begin connecting to user. Print out server detail to screen
