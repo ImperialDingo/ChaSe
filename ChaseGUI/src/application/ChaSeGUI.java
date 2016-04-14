@@ -16,54 +16,47 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import backend.TcpIpClient;
+import backend.User;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 
-public class ChaSeGUI {
+public class ChaSeGUI{
 	
 	@FXML // This method is called by the FXMLLoader when initialization is complete
     void initialize() 
     {
     	assert userTextField != null : "fx:id=\"userTextField\" was not injected: check your FXML file 'Login - ChaSe.fxml'.";
         assert loginButton != null : "fx:id=\"loginButton\" was not injected: check your FXML file 'Login - ChaSe.fxml'.";
+        
+        // Instantiate Buttons and MenuItems
+        loginButton = new Button();
+        closeButton = new MenuItem();
+        loginButton.setOnAction(event->logInButtonHandler(event));
+        closeButton.setOnAction(event->closeHandler(event));
+        
+        //Setup backend
+        chaseClient = new TcpIpClient();
+        loggedUser = new User();
+        
     }
 	
-	//Private variables to be used by controller class
-	private static String username;
-	private Stage currentStage;
-	private FXMLLoader loader;
 	
-	public void setStage(Stage stage, FXMLLoader load) {
-		this.currentStage = stage;
-		this.loader = load;
-	}
+	//Event Handlers
 	
-	protected void setUsername(String name) {
-		username = name;
-	}
-	
-	protected String getUsername() {
-		return username;
-	}
-	
-    @FXML // fx:id="userTextField"
-    private TextField userTextField; 
-    
-	@FXML // fx:id="loginButton"
-	private Button loginButton; 
-	
+	/**
+	 * Event handler for login button
+	 * @param anEvent
+	 */
 	@FXML
-	void logInButtonHandler(ActionEvent anEvent) {
-		loginButton.setOnMouseClicked((event) -> {
+	void logInButtonHandler(ActionEvent event) {
+		
 			//Get text from user 
 			String usr = userTextField.getText();
-			setUsername(usr);
-			
     		//Check if empty username or we can check other conditions for name here
-    		if (getUsername().isEmpty() || getUsername().contains(" ")) {
+    		if (usr.isEmpty() || usr.contains(" ")) {
     			//userTextField.setText("Please enter a valid username!");
-    			userTextField.clear();
-    			
+    			userTextField.clear();    			
     		}
     		else {
     			try {
@@ -81,10 +74,16 @@ public class ChaSeGUI {
     				//Set window title
     				currentStage.setTitle("ChaSe - A Chat Service");	
     				
+    				//Set username to backend
+    				
+    				loggedUser.setUsername(usr);
+    				chaseClient.setCurrentUsername(usr);
+    				
     				//Get its controller and set the stage to the currentStage. TODO -> Set username is not working
     				mainChatControl mainControl = (mainChatControl) loader.getController();
     				mainControl.setStage(currentStage);
-    				//mainControl.setUsername(username);
+
+
     				
     				//Create a new Scene with the mainWinPane and show to screen
     				Scene mainScene = new Scene(mainWinPane);
@@ -95,17 +94,44 @@ public class ChaSeGUI {
     		    catch (Exception e) {
     		    	e.printStackTrace();
     		    }
-    		}
-    	});
+    		}    
 	}
 	
+	/**
+	 * Handles close event
+	 * @param event
+	 */
+	@FXML
+	private void closeHandler(ActionEvent event) {Platform.exit();}
+	
+	
+	//Accessor Methods
+	
+	/**
+	 * 
+	 * @param stage
+	 * @param load
+	 */
+	public void setStage(Stage stage, FXMLLoader load) {
+		this.currentStage = stage;
+		this.loader = load;
+	}
+	
+	//Variable declarations
 	@FXML 
 	private MenuItem closeButton;
 	
-	@FXML
-	void closeHandler() {
-		closeButton.setOnAction((event) -> {
-			Platform.exit();
-		});
-	}
+    @FXML // fx:id="userTextField"
+    private TextField userTextField;
+    
+	@FXML // fx:id="loginButton"
+	private Button loginButton; 
+	
+	//Controller class variables
+	private Stage currentStage;
+	private FXMLLoader loader;
+	
+	protected static TcpIpClient chaseClient;
+	protected static User loggedUser;
+	
 }

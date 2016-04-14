@@ -8,6 +8,8 @@
 
 package application;
 
+import java.io.IOException;
+
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -39,10 +41,11 @@ public class mainChatControl extends ChaSeGUI{
 
         backgroundColor = new MenuItem();
         aboutButton = new MenuItem();
+        //sendButton = new Button();
                 
         backgroundColor.setOnAction(event -> setBackGroundColorHandler(event));
         aboutButton.setOnAction(event->aboutButtonHandler(event));
-
+        //sendButton.setOnAction(event-> sendButtonHandler(event));
         
     	mainChatText.setWrapText(true);
     }
@@ -51,14 +54,14 @@ public class mainChatControl extends ChaSeGUI{
     private void textInputHandler() {
         textInput.setOnKeyPressed((event) -> {
             if (event.getCode() == KeyCode.ENTER)
-                sendMessage(getUsername());
+                sendMessage();
         });
     }
     
     @FXML
     private void sendButtonHandler() {
     	sendButton.setOnMouseClicked((event) -> {
-            sendMessage(getUsername());
+            sendMessage();
         });
     }
     
@@ -119,11 +122,34 @@ public class mainChatControl extends ChaSeGUI{
     			ChaSeConsole.appendText("Please enter a valid username with no spaces\n");
     		}
     		else {
+    			chaseClient.setDestinationUsername(usr);
+    			System.out.println(chaseClient.getDestinationUsername());
     			ChaSeConsole.appendText("Connecting to " + usr + "\n");
+    			try {
+					chaseClient.startClient();
+					chaseClient.serverHandshake();
+					new Thread( ()-> receiveMessages()).start();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					System.out.println("Exception occured while attempting to start TcpIpClient");
+				}
     		}
     	});
     }
     
+    private void receiveMessages()
+    {
+    	
+    	
+    	while(true){
+    		String message = chaseClient.receiveMessages();
+    		System.out.println("WORD: " + message);
+	    	if(!message.equals(null))
+	    	{
+	    		mainChatText.appendText(message);   
+	    	}
+    	}
+    }
     @FXML
     void setBackGroundColorHandler(ActionEvent event) {
 
@@ -157,7 +183,7 @@ public class mainChatControl extends ChaSeGUI{
         });
     }
     
-    private void sendMessage(String name)
+    private void sendMessage()
     {
         msg = textInput.getText();
         
@@ -165,7 +191,17 @@ public class mainChatControl extends ChaSeGUI{
             //Don't send anything if it's empty or greater than 1000 characters
         }
         else {
-            mainChatText.appendText(name + ": " + msg + '\n');
+            mainChatText.appendText(loggedUser.getUsername() + ": " + msg + '\n');
+            System.out.println("Started: " + chaseClient.isStarted());
+            //if(chaseClient.isStarted())
+            //{
+            	try {
+					chaseClient.sendMessage(chaseClient.getDestinationUsername() + ":~:" + msg + '\n');
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					System.out.println("Exception in sending message");
+				}
+            //}
             textInput.clear();
         }
     }

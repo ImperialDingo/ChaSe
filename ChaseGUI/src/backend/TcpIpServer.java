@@ -55,10 +55,10 @@ public class TcpIpServer {
 			while(listening)
 			{
 					message = inFromClient.readLine();
-					dstUsername = message.substring(0,message.lastIndexOf(":~"));
-					message = message.substring(message.lastIndexOf(":~")+ 3);
-					System.out.println(dstUsername);
-					System.out.println(message);
+					dstUsername = message.substring(0,message.lastIndexOf(":~:"));
+					message = message.substring(message.lastIndexOf(":~:")+ 3);
+					System.out.println("DstUsername: " + dstUsername);
+					System.out.println("Message: " + message);
 					try {
 						sendMessage(username, dstUsername, message);
 					} catch (Exception e) {
