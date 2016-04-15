@@ -106,6 +106,10 @@ public class PrimaryController {
 		}
 	}
 	
+	public void logOutOfServer()
+	{
+		chaseClient.logout();
+	}
 	public void sendMessage(String message)
 	{
 		try {

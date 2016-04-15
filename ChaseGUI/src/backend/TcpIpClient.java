@@ -70,16 +70,13 @@ public class TcpIpClient {
 		return dstUsername;
 	}
 	public boolean isStarted(){return this.hasDestination;}
-	
-	public static void main(String [] argv)
+
+	public void logout()
 	{
-		
-		TcpIpClient chaseClient = new TcpIpClient();
-		try{
-			chaseClient.startClient();
-		}catch(Exception e)
-		{
-			e.printStackTrace();		
+		try {
+			clientSocket.close();
+		} catch (IOException e) {
+			System.out.println("Closing Socket");
 		}
 	}
 

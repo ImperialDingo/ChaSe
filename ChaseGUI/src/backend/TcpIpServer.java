@@ -20,7 +20,7 @@ public class TcpIpServer {
 		listening = true;
 
 		new Thread(()->listenForConnections()).start();
-		new Thread( ()->listenForClose()).start();
+		new Thread(()->listenForClose()).start();
 	}
 	
 	private void listenForConnections()
@@ -37,8 +37,8 @@ public class TcpIpServer {
 				System.out.println(username + " has enterd the chat.");
 				new Thread(()->receiveMessage(username)).start();
 			} catch (IOException e) {
-
-				e.printStackTrace();
+				System.out.println("Server has shut down");
+				
 			}
 			
 		}
@@ -66,7 +66,8 @@ public class TcpIpServer {
 					}			
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+			System.out.println(username + " has logged out.");
+			clients.remove(username);
 		}
 	}
 	
@@ -75,7 +76,7 @@ public class TcpIpServer {
 		if(clients.get(dstUsername) == null)
 		{
 			System.out.println("user not found");
-			noUserFound(srcUsername);
+			noUserFound(srcUsername, dstUsername);
 		}
 		else
 		{
@@ -86,15 +87,15 @@ public class TcpIpServer {
 		}
 	}
 	
-	private void noUserFound(String username) throws IOException
+	private void noUserFound(String username, String dstUsername) throws IOException
 	{
 		DataOutputStream outToClient = new DataOutputStream(clients.get(username).getOutputStream());
-       		outToClient.writeBytes("User is not online." + '\n');
+       		outToClient.writeBytes(dstUsername + " is not online." + '\n');
 	}
 
 	private void listenForClose()
 	{
-		 terminator = new BufferedReader(new InputStreamReader(System.in));
+		terminator = new BufferedReader(new InputStreamReader(System.in));
 		String checkClose = new String();
 		while(listening)
 		{
