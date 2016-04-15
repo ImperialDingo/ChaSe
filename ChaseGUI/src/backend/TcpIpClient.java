@@ -11,10 +11,13 @@ public class TcpIpClient {
 
 			clientSocket = new Socket("68.35.170.250", 6789);
 			fromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-			fromUser = new BufferedReader(new InputStreamReader(System.in));
 			toServer = new DataOutputStream(clientSocket.getOutputStream());
 			hasDestination = false;
-			if(username != null){loggedIn = true;}
+			if(username != null)
+			{
+				loggedIn = true;
+				serverHandshake();
+			}
 			else{loggedIn = false;}
 
 	}
@@ -28,29 +31,9 @@ public class TcpIpClient {
 			e.printStackTrace();
 		}
 	}
-	/*
-	private void startMessages()
-	{
-		try {
-			toServer.writeBytes(username+ '\n');
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		while(loggedIn)
-		{
-			try {
-				sendMessage(fromUser.readLine());
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-	}
-*/
+
 	public void sendMessage(String message) throws IOException
 	{
-		System.out.println("You Entered: " + message);
 		toServer.writeBytes(dstUsername + ":~:" + message + '\n');
 	}
 
@@ -80,7 +63,6 @@ public class TcpIpClient {
 	{
 		this.dstUsername = dstUsername;
 		hasDestination = true;
-		System.out.println("????the hell" + hasDestination);
 	}
 	
 	public String getDestinationUsername()
@@ -103,7 +85,6 @@ public class TcpIpClient {
 
 	private Socket clientSocket;
 	private BufferedReader fromServer;
-	private BufferedReader fromUser;
 	private DataOutputStream toServer;
 	private boolean loggedIn;
 	private boolean hasDestination;

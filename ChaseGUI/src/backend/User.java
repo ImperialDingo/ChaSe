@@ -1,5 +1,7 @@
 package backend;
 
+import java.io.IOException;
+
 public class User {
 
 	/**
@@ -27,7 +29,14 @@ public class User {
 	 */
 	public String getUsername(){return this.username;}
 	
-	
+	public void closeLog()
+	{
+		try {
+			myLog.closeLogOutput();
+		} catch (IOException e) {
+			System.out.println("Exception occurred while closing log file.");
+		}
+	}
 	
 	private String username;
 	private Log myLog;
