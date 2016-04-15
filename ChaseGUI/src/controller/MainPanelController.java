@@ -2,7 +2,7 @@ package controller;
 
 import javafx.geometry.Insets;
 
-
+import java.io.IOException;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -191,6 +191,7 @@ public class MainPanelController extends SubController{
 	private void logoutHandler(ActionEvent event)
 	{
 		myController.closeLog();
+		myController.logOutOfServer();
 		myController.setPane("login");
 	}
 	
@@ -229,8 +230,23 @@ public class MainPanelController extends SubController{
 	 */
 	private void colorHandler(Color selectedColor)
 	{
-		
+		String color = "#" + Integer.toHexString(selectedColor.hashCode()); 
+		setTextAreaColor(color);
 	}
+	
+	private void setTextAreaColor(String colorCode) {
+    	try {
+    		Region region = (Region) mainChatText.lookup(".content");
+    		if (colorCode.equals("#ff"))
+    		{
+    			throw new Exception("Sorry, ChaSe does not support color #FF");
+    		}
+    		region.setStyle("-fx-background-color: " + colorCode + ";");
+    	}
+    	catch (Exception e) {
+    		mainChatText.appendText("<ChaSe>: " + e.getMessage());
+    	}
+    }
 	
 	/**
 	 * Handles send event
@@ -265,8 +281,14 @@ public class MainPanelController extends SubController{
     	String message = new String();
     	while(true)
     	{
-    		message = myController.receiveMessages();
-    		mainChatText.appendText(message + '\n');
+    		try {
+				message = myController.receiveMessages();
+				mainChatText.appendText(message + '\n');
+			} catch (IOException e) {
+				System.out.println("Server has disconnected");
+				break;
+			}
+    		
     	}
     	
     }

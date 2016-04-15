@@ -62,7 +62,7 @@ public class TcpIpServer {
 					try {
 						sendMessage(username, dstUsername, message);
 					} catch (Exception e) {
-						e.printStackTrace();
+						break;
 					}			
 			}
 		} catch (IOException e) {

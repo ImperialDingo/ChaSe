@@ -37,19 +37,12 @@ public class TcpIpClient {
 		toServer.writeBytes(dstUsername + ":~:" + message + '\n');
 	}
 
-	public String receiveMessages()
+	public String receiveMessages() throws IOException
 	{
-		System.out.println(loggedIn);
 		while(loggedIn)
 		{
-			try {
-				String tmp = fromServer.readLine();
-				System.out.println(tmp);
-				return tmp;
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}			
+			String tmp = fromServer.readLine();
+			System.out.println(tmp);
 		}
 		return null;
 	}
@@ -75,6 +68,7 @@ public class TcpIpClient {
 	{
 		try {
 			clientSocket.close();
+			loggedIn = false;
 		} catch (IOException e) {
 			System.out.println("Closing Socket");
 		}

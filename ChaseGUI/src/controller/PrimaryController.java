@@ -120,7 +120,7 @@ public class PrimaryController {
 		}
 	}
 	
-	public String receiveMessages()
+	public String receiveMessages() throws IOException
 	{
 		return chaseClient.receiveMessages();
 	}
