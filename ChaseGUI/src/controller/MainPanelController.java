@@ -31,6 +31,8 @@ public class MainPanelController extends SubController{
 		myController.getStage().setScene(mainScene);
 		myController.getStage().show();
 		
+		mainChatText.appendText(myController.readLogFile());
+		myController.startLog();
 		new Thread(()->receiveMessages()).start();
 	}
 	
@@ -267,6 +269,7 @@ public class MainPanelController extends SubController{
     	{
     		mainChatText.appendText("Me: " + message + '\n');
     		myController.sendMessage(message);
+    		myController.writeToLogFile("Me: " + message + '\n');
     	}
     	else
     	{
@@ -284,6 +287,7 @@ public class MainPanelController extends SubController{
     		try {
 				message = myController.receiveMessages();
 				mainChatText.appendText(message + '\n');
+				myController.writeToLogFile(message + '\n');
 			} catch (IOException e) {
 				System.out.println("Server has disconnected");
 				break;

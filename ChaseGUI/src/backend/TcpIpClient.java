@@ -42,7 +42,8 @@ public class TcpIpClient {
 		while(loggedIn)
 		{
 			String tmp = fromServer.readLine();
-			System.out.println(tmp);
+			//System.out.println(tmp);
+			return tmp;
 		}
 		return null;
 	}
@@ -62,6 +63,7 @@ public class TcpIpClient {
 	{
 		return dstUsername;
 	}
+	
 	public boolean isStarted(){return this.hasDestination;}
 
 	public void logout()

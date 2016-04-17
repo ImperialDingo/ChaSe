@@ -1,8 +1,11 @@
 package backend;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 
 public class Log {
@@ -20,7 +23,6 @@ public class Log {
 				logFile.createNewFile();
 			}
 			logOutput = new FileOutputStream(logFile);
-			logInput = new FileInputStream(logFile);
 			
 		}catch(IOException e)
 		{
@@ -35,6 +37,7 @@ public class Log {
 	public void writeToLog(String message)
 	{
 		byte[] contentInBytes = message.getBytes();
+		
 		try{
 			logOutput.write(contentInBytes);
 			logOutput.flush();
@@ -48,18 +51,37 @@ public class Log {
 	 * Parse logfile to be sent to text pane 
 	 * @return
 	 */
-	public String retreiveLog()
+	public String retreiveLog(String username)
 	{
-		String temp = "Log Stuff";
-		try
-		{
-			logInput.close();	
+		
+		try{
+			File tmpLogFile = new File(username+ "LogFile.txt");
+
+			if(!tmpLogFile.exists())
+			{
+				return "";
+			}
+			else{			
+				String line = new String();
+				StringBuilder logBuilder = new StringBuilder();
+				BufferedReader logReader;
+	
+				logReader = new BufferedReader(new FileReader(tmpLogFile));
+	
+		        while( ( line = logReader.readLine() ) != null )
+		        {
+		        	logBuilder.append( line );
+		        	logBuilder.append( '\n' );
+		        }
+		        logReader.close();
+		        return logBuilder.toString();
+			}
 		}catch(IOException e)
 		{
 			System.out.println("Exception occured when attempting to read from log file.");
 		}
 
-		return temp;
+		return "";
 	}
 	
 	/**
@@ -71,6 +93,6 @@ public class Log {
 	
 	
 	private FileOutputStream logOutput;
-	private FileInputStream logInput;
+	//private FileInputStream logInput;
 	private File logFile;
 }

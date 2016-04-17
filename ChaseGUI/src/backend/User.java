@@ -20,7 +20,6 @@ public class User {
 	public void setUsername(String username)
 	{
 		this.username = username;
-		myLog.createLog(username);
 	}
 	
 	/**
@@ -36,6 +35,22 @@ public class User {
 		} catch (IOException e) {
 			System.out.println("Exception occurred while closing log file.");
 		}
+	}
+	
+	public void startLog()
+	{
+		myLog.createLog(username);
+	}
+	public void writeToLogFile(String message)
+	{
+		myLog.writeToLog(message);
+	}
+	
+	public String readLogFile()
+	{
+		String log = new String();
+		log = myLog.retreiveLog(username);
+		return log;
 	}
 	
 	private String username;

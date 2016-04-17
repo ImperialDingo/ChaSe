@@ -125,6 +125,21 @@ public class PrimaryController {
 		return chaseClient.receiveMessages();
 	}
 	
+	public void startLog()
+	{
+		loggedUser.startLog();
+	}
+	public void writeToLogFile(String message)
+	{
+		loggedUser.writeToLogFile(message);
+	}
+	
+	public String readLogFile()
+	{
+		String log = loggedUser.readLogFile();
+		return log;
+	}
+	
 	private TcpIpClient chaseClient;
 	private User loggedUser;
 	private User selectedUser = null;
