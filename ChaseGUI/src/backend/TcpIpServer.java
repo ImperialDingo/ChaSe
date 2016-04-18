@@ -76,6 +76,7 @@ public class TcpIpServer {
 			while(listening)
 			{
 					message = inFromClient.readLine();
+					if(message.equals(null)){break;}
 					dstUsername = message.substring(0,message.lastIndexOf(":~:"));
 					message = message.substring(message.lastIndexOf(":~:")+ 3);
 					try {

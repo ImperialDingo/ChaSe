@@ -104,7 +104,7 @@ public class MainPanelController extends SubController{
 		blueViolet.setOnAction(event->colorHandler(Color.BLUEVIOLET));
 		chocolate.setOnAction(event->colorHandler(Color.CHOCOLATE));
 		crimson.setOnAction(event->colorHandler(Color.CRIMSON));
-		darkGreen.setOnAction(event->colorHandler(Color.GREEN));
+		darkGreen.setOnAction(event->colorHandler(Color.LIGHTGREEN));
 		lightPink.setOnAction(event->colorHandler(Color.LIGHTPINK));
 		black.setOnAction(event->colorHandler(Color.CORNSILK));		
 		
@@ -320,12 +320,10 @@ public class MainPanelController extends SubController{
 				message = myController.receiveMessages();
 				mainChatText.appendText(message + '\n');
 				myController.writeToLogFile(message + '\n');
-			} catch (IOException e) {
+			} catch (Exception e) {
 				break;
-			}
-    		
-    	}
-    	
+			}    		
+    	}    	
     }
 	
 
