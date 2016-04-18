@@ -17,9 +17,18 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
+/**
+ * LoginPanelController object
+ * @authors Josh Oglesby & Jean Michael Almonte
+ * <P> This object handles all things to do with the login GUI.
+ *
+ */
 
 public class LoginPanelController extends SubController {
 
+	/**
+	 * Override function showPane to instantiate the login GUI
+	 */
 	@Override
 	public void showPane() {
 		
@@ -70,7 +79,7 @@ public class LoginPanelController extends SubController {
 	
 	/**
 	 * Event handler for login button
-	 * @param anEvent
+	 * @param anEvent login button event
 	 */
 	void logInButtonHandler(ActionEvent event) 
 	{		

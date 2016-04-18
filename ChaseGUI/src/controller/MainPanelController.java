@@ -17,9 +17,18 @@ import javafx.scene.control.*;
 import javafx.scene.paint.Color;
 import javafx.scene.layout.*;
 
+/**
+ * MainPanelController object
+ * @authors Josh Oglesby & Jean Michael Almonte
+ * <P> This class handles all events within the main chat window.
+ */
 
 public class MainPanelController extends SubController{
 
+	
+	/**
+	 * Override function showPane to instantiate the mainPanel GUI
+	 */
 	@Override
 	public void showPane() {
 		//Create a new Scene with the mainWinPane and show to screen
@@ -36,7 +45,10 @@ public class MainPanelController extends SubController{
 		new Thread(()->receiveMessages()).start();
 	}
 	
-	
+	/**
+	 * Creates the mainPanel
+	 * @return Pane
+	 */
 	@SuppressWarnings("static-access")
 	private Pane createMainPane()
 	{
@@ -60,6 +72,10 @@ public class MainPanelController extends SubController{
 		return mainWinPane;
 	}
 	
+	/**
+	 * Creates the menu Bar
+	 * @return MenuBar contianing all options
+	 */
 	private MenuBar createMenuBar()
 	{
 		//Create Menubar, menus and items
@@ -75,9 +91,9 @@ public class MainPanelController extends SubController{
 		MenuItem blueViolet = new MenuItem("Blue/Violet");
 		MenuItem chocolate = new MenuItem("Chocolate");
 		MenuItem crimson = new MenuItem("Crimson");
-		MenuItem darkGreen = new MenuItem("Dark Green");
+		MenuItem darkGreen = new MenuItem("Green");
 		MenuItem lightPink = new MenuItem("Light Pink");
-		MenuItem black = new MenuItem("Black");		
+		MenuItem black = new MenuItem("Cornsilk");		
 		
 		//Set Event Handlers for menu items
 		connect.setOnAction(event->connectHandler(event));
@@ -88,9 +104,9 @@ public class MainPanelController extends SubController{
 		blueViolet.setOnAction(event->colorHandler(Color.BLUEVIOLET));
 		chocolate.setOnAction(event->colorHandler(Color.CHOCOLATE));
 		crimson.setOnAction(event->colorHandler(Color.CRIMSON));
-		darkGreen.setOnAction(event->colorHandler(Color.DARKGREEN));
+		darkGreen.setOnAction(event->colorHandler(Color.GREEN));
 		lightPink.setOnAction(event->colorHandler(Color.LIGHTPINK));
-		black.setOnAction(event->colorHandler(Color.BLACK));		
+		black.setOnAction(event->colorHandler(Color.CORNSILK));		
 		
 		//Assign menu items to respective menus
 		fileMenu.getItems().addAll(aboutItem, logout);
@@ -104,6 +120,10 @@ public class MainPanelController extends SubController{
 		
 	}
 	
+	/**
+	 * Creates the main chat window
+	 * @return
+	 */
 	@SuppressWarnings("static-access")
 	private AnchorPane createChatPane()
 	{
@@ -147,6 +167,10 @@ public class MainPanelController extends SubController{
 		return chatPane;
 	}
 	
+	/**
+	 * Handles the connection selection for the desired user
+	 * @param event
+	 */
 	private void connectHandler(ActionEvent event)
 	{
 
@@ -210,7 +234,7 @@ public class MainPanelController extends SubController{
         aboutPane.setPrefWidth(300);
         aboutPane.setPrefHeight(50);
         TextArea about = new TextArea();
-        about.setText("Created by Joshua C Oglesby &amp; Jean Michael Almonte. All Rights Reserved. 2016.");
+        about.setText("Created by Joshua C Oglesby & Jean Michael Almonte. All Rights Reserved. 2016.");
         aboutPane.getChildren().add(about);
         about.setPrefWidth(300);
         about.setPrefHeight(50);
@@ -236,6 +260,10 @@ public class MainPanelController extends SubController{
 		setTextAreaColor(color);
 	}
 	
+	/**
+	 * Updates the text background color
+	 * @param colorCode desired color from menu
+	 */
 	private void setTextAreaColor(String colorCode) {
     	try {
     		Region region = (Region) mainChatText.lookup(".content");
@@ -264,6 +292,7 @@ public class MainPanelController extends SubController{
     private void sendMessage()
     {
     	String message = textInput.getText();
+    	if(message.equals("")){return;}
     	
     	if(myController.getSelectedUsername() != null)
     	{
@@ -279,6 +308,9 @@ public class MainPanelController extends SubController{
     	textInput.clear();
     }
     
+    /**
+     * Upon reveiving a message it will populate to the mainChatText area.
+     */
     private void receiveMessages()
     {
     	String message = new String();
@@ -289,7 +321,6 @@ public class MainPanelController extends SubController{
 				mainChatText.appendText(message + '\n');
 				myController.writeToLogFile(message + '\n');
 			} catch (IOException e) {
-				System.out.println("Server has disconnected");
 				break;
 			}
     		
@@ -297,180 +328,14 @@ public class MainPanelController extends SubController{
     	
     }
 	
-/*	
-	@FXML
-    private void textInputHandler() {
-        textInput.setOnKeyPressed((event) -> {
-            if (event.getCode() == KeyCode.ENTER)
-                sendMessage();
-        });
-    }
-    
 
-    
-    @FXML
-    private void aboutButtonHandler(ActionEvent event) {
-            //Initialize the about screen
-            try {
-            	//aboutStage = new Stage();
-            	Stage SecondaryStage = new Stage();
-            	SecondaryStage.setTitle("About ChaSe 2016");
-                
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("about.fxml"));
-                Pane aboutPane = (Pane)loader.load();
-                
-                Scene scene = new Scene(aboutPane);
-                SecondaryStage.getIcons().add(icon);
-                SecondaryStage.setScene(scene);
-                SecondaryStage.centerOnScreen();
-                SecondaryStage.setResizable(false);
-                SecondaryStage.sizeToScene();
-                SecondaryStage.show();
-                
-            }
-            catch (Exception e) {
-                e.printStackTrace();
-            }
-  
-    }
-    
-    @FXML
-    void PreferencesHandler(ActionEvent event) {
-
-            try {
-            	Stage SecondaryStage = new Stage();
-            	SecondaryStage.setTitle("ChaSe - Preferences");
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("Preferences.fxml"));
-                Pane prefPane = (Pane)loader.load();
-                Scene scene = new Scene(prefPane);
-                SecondaryStage.getIcons().add(icon);
-                SecondaryStage.setResizable(false);
-                SecondaryStage.setScene(scene);
-                SecondaryStage.sizeToScene();
-                SecondaryStage.centerOnScreen();
-                SecondaryStage.show();
-            }
-            catch (Exception e) {
-                e.printStackTrace();
-            }
-
-    }
-    @FXML
-    void connectToUserHandler() {
-    	connectButton.setOnMouseClicked((event) -> {
-    		String usr = usernameField.getText();
-			System.out.println(myController.getUsername());  		
-    		//Check if empty username or we can check other conditions for name here
-    		if (usr.isEmpty() || usr.contains(" ")) {
-    			//userTextField.setText("Please enter a valid username!");
-    			usernameField.clear();
-    			ChaSeConsole.appendText("Please enter a valid username with no spaces\n");
-    		}
-    		else {
-    			//chaseClient.setDestinationUsername(usr);
-    			//System.out.println(chaseClient.getDestinationUsername());
-    			ChaSeConsole.appendText("Connecting to " + usr + "\n");
-    			try {
-					//chaseClient.startClient();
-					//chaseClient.serverHandshake();
-					//new Thread( ()-> receiveMessages()).start();
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					System.out.println("Exception occured while attempting to start TcpIpClient");
-				}
-    		}
-    	});
-    }
-    
-    private void receiveMessages()
-    {
-    
-    }
-    /*
-    @FXML
-    void setBackGroundColorHandler(ActionEvent event) {
-    		String color = "#" + Integer.toHexString(colorPicker.getValue().hashCode()); 
-    		setTextAreaColor(color);
-    }*/
-    
- /*   // TODO once user selects save, begin connecting to user. Print out server detail to screen
-    @FXML
-    void saveButtonHandler() {
-    	saveButton.setOnMouseClicked((event) -> {
-    		Node source = (Node) event.getSource();
-    		Stage stage = (Stage) source.getScene().getWindow();
-    		stage.close();
-    	});
-    }
-  
-    @FXML
-    void okAboutButtonHandler() {
-        okAboutButton.setOnMouseClicked((event) -> {
-            Stage stage = (Stage) okAboutButton.getScene().getWindow();
-            stage.close();
-        });
-    }
-    
-    @FXML
-    void closeHandler() {
-        closeButton.setOnAction((event) -> {
-        	Platform.exit();
-        });
-    }
-    
-    private void sendMessage()
-    {
-    	mainChatText.appendText(myController.getUsername() + ":" + msg);
-    }
-    
-    private void setTextAreaColor(String colorCode) {
-    	try {
-    		Region region = (Region) mainChatText.lookup(".content");
-    		if (colorCode.equals("#ff"))
-    		{
-    			throw new Exception("Sorry, ChaSe does not support color #FF");
-    		}
-    		region.setStyle("-fx-background-color: " + colorCode + ";");
-    	}
-    	catch (Exception e) {
-    		mainChatText.appendText("<ChaSe>: " + e.getMessage());
-    	}
-    }
-    
-   */ 
-
+    // Private variables
     private TextArea mainChatText;
     private Scene mainScene;
     private Pane mainPane;
     private Stage secondaryStage;
-    private Image icon = new Image(getClass().getResourceAsStream("t.png"));
-    private String msg;
-    
-     
-    private MenuItem closeButton;
-    
-    private TextArea ChaSeConsole;
-    
-	@SuppressWarnings("unused")
-	private Stage mainStage;
-
-
-    private TextField textInput; 
-    
-
+    private TextField textInput;
     private Button sendButton; 
-
-
-
-    private Button okAboutButton;
-
-    
-    private TextField usernameField;
-    
-    
-    private Button connectButton;
-    
-
-    private MenuItem connectMenu;   
+    private Image icon = new Image(getClass().getResourceAsStream("t.png"));
 
 }

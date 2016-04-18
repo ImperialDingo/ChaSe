@@ -4,15 +4,29 @@ import java.io.*;
 import java.net.*;
 import java.util.HashMap;
 
+/**
+ * TcpIpServer object
+ * @authors Josh Oglesby & Jean Michael Almonte
+ * <P> Handles all the routing of user messages from the TcpIpClients *
+ */
+ 
 
 public class TcpIpServer {
 
+	/**
+	 * Constructor
+	 * Instantiates the HashMap
+	 */
 	public TcpIpServer()
 	{
 		clients = new HashMap<String, Socket>();
 	}	
 
 
+	/**
+	 * Starts the server and kicks off threads.
+	 * @throws Exception
+	 */
 	public void startServer() throws Exception
 	{
 		System.out.println("Starting Server");
@@ -23,6 +37,9 @@ public class TcpIpServer {
 		new Thread(()->listenForClose()).start();
 	}
 	
+	/**
+	 * Listens for new TcpIpClient connections and adds them to the HashMap.
+	 */
 	private void listenForConnections()
 	{
 		while(listening)
@@ -44,6 +61,10 @@ public class TcpIpServer {
 		}
 	}
 
+	/**
+	 * Handler for receiving a message from a TcpIpClient and routing it.
+	 * @param username username of the TcpIpClient it is receiving from.
+	 */
 	private void receiveMessage(String username)
 	{
 		String dstUsername = new String();
@@ -57,8 +78,6 @@ public class TcpIpServer {
 					message = inFromClient.readLine();
 					dstUsername = message.substring(0,message.lastIndexOf(":~:"));
 					message = message.substring(message.lastIndexOf(":~:")+ 3);
-					System.out.println("DstUsername: " + dstUsername);
-					System.out.println("Message: " + message);
 					try {
 						sendMessage(username, dstUsername, message);
 					} catch (Exception e) {
@@ -71,28 +90,42 @@ public class TcpIpServer {
 		}
 	}
 	
+	/**
+	 * Sends a message to a TcpIpClient
+	 * @param srcUsername username of the sender
+	 * @param dstUsername username of the receiver
+	 * @param message string containing the message from the source to destination
+	 * @throws Exception
+	 */
 	private void sendMessage(String srcUsername, String dstUsername, String message)throws Exception
 	{
 		if(clients.get(dstUsername) == null)
 		{
-			System.out.println("user not found");
 			noUserFound(srcUsername, dstUsername);
 		}
 		else
 		{
-			System.out.println("User found");
-			message = srcUsername + ":~:" + message + '\n';
+			message = srcUsername + ":" + message + '\n';
 			DataOutputStream outToClient = new DataOutputStream(clients.get(dstUsername).getOutputStream());
 		       	outToClient.writeBytes(message);
 		}
 	}
 	
+	/**
+	 * Handles if the desired user is not logged on
+	 * @param username string containing the username of the sender
+	 * @param dstUsername username of the receiver
+	 * @throws IOException
+	 */
 	private void noUserFound(String username, String dstUsername) throws IOException
 	{
 		DataOutputStream outToClient = new DataOutputStream(clients.get(username).getOutputStream());
        		outToClient.writeBytes(dstUsername + " is not online." + '\n');
 	}
 
+	/**
+	 * Listener for the "close" statement from the terminal to close down the server
+	 */
 	private void listenForClose()
 	{
 		terminator = new BufferedReader(new InputStreamReader(System.in));
@@ -112,6 +145,9 @@ public class TcpIpServer {
 		}
 	}
 
+	/**
+	 * Should notify the clients if it shuts down; did not get a chance to implement.
+	 */
 	private void notifyAndClose()
 	{
 		System.out.println("Terminating ChaSe Server.");
@@ -124,6 +160,11 @@ public class TcpIpServer {
 		}
 	}
 
+	/**
+	 * main to launch the server
+	 * @param argv
+	 * @throws Exception
+	 */
 	public static void main(String argv[]) throws Exception
 	{
 		TcpIpServer chaseServer = new TcpIpServer();

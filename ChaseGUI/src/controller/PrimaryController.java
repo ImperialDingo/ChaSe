@@ -7,6 +7,12 @@ import backend.TcpIpClient;
 import backend.User;
 import javafx.stage.Stage;
 
+/**
+ * PrimaryController object
+ * @authors Josh Oglesby & Jean Michael Almonte
+ * <P> This class handles all interactions between the GUIS and the User/TcpIpClient.
+ */
+
 public class PrimaryController {
 	
 	/**
@@ -16,7 +22,6 @@ public class PrimaryController {
 	{
 		chaseClient = new TcpIpClient();
 		loggedUser = new User();
-		//selectedUser = new User();
 		panels = new HashMap<String, SubController>();
 		myStage = new Stage();
 	}
@@ -96,6 +101,9 @@ public class PrimaryController {
 		loggedUser.closeLog();
 	}
 	
+	/**
+	 * Starts the connection to the server
+	 */
 	public void logToServer()
 	{
 		try {
@@ -106,10 +114,17 @@ public class PrimaryController {
 		}
 	}
 	
+	/**
+	 * Logs out of server
+	 */
 	public void logOutOfServer()
 	{
 		chaseClient.logout();
 	}
+	/**
+	 * Passes message to chaseClient
+	 * @param message message to be send to another user
+	 */
 	public void sendMessage(String message)
 	{
 		try {
@@ -120,26 +135,43 @@ public class PrimaryController {
 		}
 	}
 	
+	/**
+	 * Receives message from chaseClient
+	 * @return string containing a message from another user
+	 * @throws IOException
+	 */
 	public String receiveMessages() throws IOException
 	{
 		return chaseClient.receiveMessages();
 	}
 	
+	/**
+	 * Sends commad to loggedUser to start the logfile
+	 */
 	public void startLog()
 	{
 		loggedUser.startLog();
 	}
+	/**
+	 * Sends command to LoggedUser to write a message to file
+	 * @param message message to be written to logfile
+	 */
 	public void writeToLogFile(String message)
 	{
 		loggedUser.writeToLogFile(message);
 	}
 	
+	/**
+	 * Reads from log upon startup
+	 * @return string containing all that is logged in the logfile
+	 */
 	public String readLogFile()
 	{
 		String log = loggedUser.readLogFile();
 		return log;
 	}
 	
+	//private variables	
 	private TcpIpClient chaseClient;
 	private User loggedUser;
 	private User selectedUser = null;

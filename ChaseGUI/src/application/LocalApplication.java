@@ -8,8 +8,17 @@ import controller.MainPanelController;
 import controller.PrimaryController;
 
 
+/**
+ * 
+ * @authors Josh Oglesby & Jean Michael Almonte
+ * <P> This is the entry for the program.
+ *
+ */
 public class LocalApplication extends Application{
 
+	/**
+	 * Override start fuction to start the app
+	 */
 	@Override
 	public void start(Stage primaryStage){
 		

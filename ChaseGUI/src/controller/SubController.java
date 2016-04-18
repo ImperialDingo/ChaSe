@@ -2,6 +2,12 @@ package controller;
 
 import javafx.fxml.FXMLLoader;
 
+/**
+ * SubController abstrac class
+ * @authors Josh Oglesby & Jean Michael Almonte
+ * <P> This is meant to act as the base class for the GUI controllers.
+ *
+ */
 public abstract class SubController {
 	
 	/**
@@ -14,7 +20,7 @@ public abstract class SubController {
 	}
 
 	/**
-	 * Required override for all BasePane extensions to show each pane
+	 * Required override for all SubControllers extensions to show each pane
 	 */
 	public abstract void showPane();
 	

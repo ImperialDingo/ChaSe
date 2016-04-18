@@ -2,17 +2,21 @@ package backend;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+
+/**
+ * Log object
+ * @authors Josh Oglesby & Jean Michael Almonte
+ * <P> Handles all the logging for the program. *
+ */
 
 public class Log {
 	
 	/**
 	 * Initializes the log file
-	 * @param username
+	 * @param username current username of the loggedUser
 	 */
 	public void createLog(String username)
 	{
@@ -32,7 +36,7 @@ public class Log {
 	
 	/**
 	 * Writes a message to a FileOutputStream
-	 * @param message
+	 * @param message string to write to the logFile
 	 */
 	public void writeToLog(String message)
 	{
@@ -49,7 +53,8 @@ public class Log {
 	
 	/**
 	 * Parse logfile to be sent to text pane 
-	 * @return
+	 * @param username specifies the username log to read
+	 * @return string containing the contents of the logfile
 	 */
 	public String retreiveLog(String username)
 	{
@@ -93,6 +98,5 @@ public class Log {
 	
 	
 	private FileOutputStream logOutput;
-	//private FileInputStream logInput;
 	private File logFile;
 }
